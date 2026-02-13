@@ -25,6 +25,10 @@ lang: en
 
 * [Setting up encoding, transcoding and xAPI Microservices](microservices_en)
 
+#### Remote mode via Esup-Runner! [New in v4.2](https://img.shields.io/badge/Nouveaut%C3%A9-v4.2-f39c12?style=flat-square)
+
+* [Remote encoding and transcription services via Esup-Runner](esup-runner_en)
+
 ### Optional features
 
 #### BigBlueButton

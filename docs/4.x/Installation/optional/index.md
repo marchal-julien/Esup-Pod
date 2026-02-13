@@ -25,6 +25,10 @@ lang: fr
 
 * [Mise en place des microservices d’encodage, de transcodage et de xAPI](microservices_fr)
 
+#### Mode déporté via Esup-Runner ![Nouveauté v4.2](https://img.shields.io/badge/Nouveaut%C3%A9-v4.2-f39c12?style=flat-square)
+
+* [Déporter les services d'encodage et de transcription via Esup-Runner](esup-runner_fr)
+
 ### Fonctionnalités optionnelles
 
 #### BigBlueButton

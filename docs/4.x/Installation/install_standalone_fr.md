@@ -279,14 +279,16 @@ En théorie le service démarre automatiquement. Si vous avez installé Redis su
 
 Si vous utilisez Redis sur une autre machine, n’oubliez pas de modifier le **bind** dans le fichier de configuration _/etc/redis/redis.conf_
 
-> Dans ce cas là, pensez également à vérifier la valeur de `protected-mode` dans le fichier de configuration _/etc/redis/redis.conf_
+> Dans ce cas là, pensez également à vérifier la valeur de `protected-mode` et de `requirepass` dans le fichier de configuration _/etc/redis/redis.conf_
 >
-> Soit mettre _protected-mode no_ (et comprendre ce que cela implique) soit mettre _protected-mode yes_ et réaliser la gestion nécessaire vis-à-vis d’un mot de passe pour Redis.
+> Soit mettre _protected-mode no_ (et comprendre ce que cela implique en termes d'accès) soit mettre _protected-mode yes_ (et comprendre que Redis ne pourra être accessible que depuis ce serveur).
 >
-> Si _protected-mode yes_ sans mot de passe, vous obtiendrez une erreur du type : `consumer: Cannot connect to redis://:6379/: Error 111 connecting to :6379. Connection refused`
+> Si _protected-mode yes_(valeur par défaut) et que vous souhaitez y accéder depuis un autre serveur, vous obtiendrez une erreur du type : `consumer: Cannot connect to redis://:6379/: Error 111 connecting to :6379. Connection refused`
+>
+> Si vous souhaitez sécuriser votre Redis (**fortement recommandé**), il est possible de mettre un mot de passe pour Redis, via le paramètre `requirepass "<my_redis_password>"`  (cf. configuration ci-dessous).
 {: .alert .alert-warning}
 
-Si vous ne souhaitez pas toucher au bind, vous pouvez aussi modifier votre `settings_local.py` et personnaliser cette extrait du _settings.py_ par défaut avec votre `<my_redis_host>`
+Si vous ne souhaitez pas toucher au bind, vous pouvez aussi modifier votre `settings_local.py` et personnaliser cet extrait du _settings.py_ par défaut avec votre `<my_redis_host>` :
 
 ```py
 CACHES = {
@@ -317,10 +319,45 @@ SESSION_REDIS = {
 }
 ```
 
+En cas de version sécurisé de Redis avec mot de passe, vous pouvez modifier votre `settings_local.py`  avec votre `<my_redis_host>` et `<my_redis_password>` :
+
+```py
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://:<my_redis_password>@<my_redis_host>:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "pod",
+    },
+    "select2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://:<my_redis_password>@<my_redis_host>:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+SESSION_ENGINE = "redis_sessions.session"
+SESSION_REDIS = {
+    "host": "<my_redis_host>",
+    "port": 6379,
+    "db": 4,
+    "prefix": "session",
+    "socket_timeout": 1,
+    "retry_on_timeout": False,
+    "password": "<my_redis_password>",
+}
+```
+
 Selon votre configuration, `<my_redis_host>` peut être remplacé soit par :
 
 - **127.0.0.1** : pour des accès seulement en local à la machine.
 - **l’adresse IP du serveur REDIS**, obtenu par `hostname -I` : pour des accès distants (pensez à modifier aussi le paramètre `bind` de _/etc/redis/redis.conf_).
+
+> Attention au format de votre mot de passe Redis `<my_redis_password>`; s'il contient des caractères 'problématiques' (`#`, `@`, `:`, `/`, `?`, `&`, `%`, `+`, `[`, `]`, `{`, `}`, `"`, space), cela provoquera, dans Pod, une erreur du type `Invalid IPv6 URL` pour les URLs Redis.
+{: .alert .alert-warning}
 
 Pour démarrer le service REDIS automatiquement, lancer la commande :
 

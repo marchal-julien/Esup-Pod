@@ -37,11 +37,12 @@ Ce document explique:
 
 ## Paramétrage `settings_local.py`
 
-Configuration minimale recommandée:
+Configuration minimale recommandée, en production:
 
 ```python
 USE_RUNNER_MANAGER = True
 RM_TASKS_DELETED_AFTER_DAYS = 60
+SECURE_SSL_REDIRECT = True
 ```
 
 ### `USE_RUNNER_MANAGER = True`
@@ -56,13 +57,19 @@ RM_TASKS_DELETED_AFTER_DAYS = 60
 - Supprime les tâches `completed` âgées de plus de 60 jours.
 - Si absent, invalide, ou `<= 0`, le nettoyage est ignoré.
 
+### `SECURE_SSL_REDIRECT = True`
+
+- Paramètre utilisé en production pour forcer la redirection HTTP vers HTTPS.
+- Ce réglage devrait déjà être présent; vérifiez que sa valeur est bien `True`.
+- S'il est absent, le site reste accessible en HTTP.
+
 ## Configuration via l'administration
 
 ### 1. Administration des Runner Managers
 
 Dans l'admin Django, créez au moins un Runner Manager:
 
-- `name`: nom lisible (ex: `RM-Encode-01`);
+- `name`: nom lisible (ex: `um-rm-gpu01`);
 - `priority`: plus la valeur est faible, plus le runner est prioritaire;
 - `url`: URL de base du runner manager;
 - `token`: token Bearer partagé avec ce runner;

@@ -128,10 +128,11 @@ Sans cette commande en récurrence:
 
 ## Planification CRON recommandée
 
-Exemple toutes les 2 minutes:
+Exemple toutes les 3 minutes:
 
 ```cron
-*/2 * * * * cd /home/pod/django_projects/podv4 && python manage.py process_tasks >> /home/pod/django_projects/podv4/pod/log/process_tasks.log 2>&1
+# Job pour les tâches Esup-Runner
+*/3 * * * * /usr/bin/bash -c 'export WORKON_HOME=/home/pod/.virtualenvs; export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3; cd /usr/local/django_projects/podv4; source /usr/local/bin/virtualenvwrapper.sh; workon django_pod4; python manage.py process_tasks >> /usr/local/django_projects/podv4/pod/log/process_tasks.log 2>&1'
 ```
 
 Conseils:
@@ -143,7 +144,7 @@ Conseils:
 
 1. Activer `USE_RUNNER_MANAGER = True`.
 2. Régler `RM_TASKS_DELETED_AFTER_DAYS` (ex: `60`).
-3. Créer les Runner Managers dans l'admin (URL/token/priorité/site).
-4. Valider chaque runner via **Test connection**.
+3. Créer les Runner Managers dans l'administration (URL/token/priorité/site).
+4. Valider chaque manager via **Test connection**.
 5. Déployer le CRON `process_tasks`.
 6. Vérifier dans l'admin `Task` la transition des statuts `pending -> running -> completed`.

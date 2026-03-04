@@ -43,6 +43,7 @@ Configuration minimale recommandée, en production:
 USE_RUNNER_MANAGER = True
 RM_TASKS_DELETED_AFTER_DAYS = 60
 SECURE_SSL_REDIRECT = True
+ENCODE_VIDEO = "start_encode"
 ```
 
 ### `USE_RUNNER_MANAGER = True`
@@ -63,11 +64,16 @@ SECURE_SSL_REDIRECT = True
 - Ce réglage devrait déjà être présent; vérifiez que sa valeur est bien `True`.
 - S'il est absent, le site reste accessible en HTTP.
 
+### `ENCODE_VIDEO = "start_encode"`
+
+- Fonction appelée pour lancer l’encodage des vidéos.
+- Il s'agit de la valeur par défaut, donc ce paramètre peut être absent de votre `settings_local.py`.
+
 ## Configuration via l'administration
 
 ### 1. Administration des Runner Managers
 
-Dans l'admin Django, créez au moins un Runner Manager:
+Dans l'administration, créez au moins un Runner Manager:
 
 - `name`: nom lisible (ex: `um-rm-gpu01`);
 - `priority`: plus la valeur est faible, plus le runner est prioritaire;
@@ -93,10 +99,10 @@ Sur la fiche d'un Runner Manager, après avoir réalisé la saisie et sauvegarde
 
 L'admin `Task` permet de piloter la file:
 
-- visualiser `type` (`encoding`, `transcription`, `studio`);
+- visualiser le `type` (`encoding`, `transcription`, `studio`);
 - suivre le `status` (`pending`, `running`, `completed`, `failed`, `timeout`);
-- voir le `runner_manager`, `task_id`, date, vidéo/recording associé;
-- lire `script_output` pour diagnostic.
+- voir les informations associées aux tâches;
+- lire le champ `script_output` pour diagnostic.
 
 Action utile:
 

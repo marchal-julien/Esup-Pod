@@ -4,8 +4,8 @@
 #  (")_(")
 #------------------------------------------------------------------------------------------------------------------------------
 # Conteneur node
-ARG NODE_VERSION=23
-ARG PYTHON_VERSION=3.12
+ARG NODE_VERSION=node:23
+ARG PYTHON_VERSION=python:3.12-bookworm
 FROM $NODE_VERSION AS source-build-js
 
 WORKDIR /tmp/pod

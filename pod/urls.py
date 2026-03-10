@@ -221,7 +221,7 @@ if USE_RUNNER_MANAGER:
         ),
     ]
 
-if settings.DEBUG:
+if settings.DEBUG and settings.USE_DEBUG_TOOLBAR :
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     if importlib.util.find_spec("debug_toolbar") is not None:
         urlpatterns += [
